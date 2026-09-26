@@ -1,0 +1,17 @@
+{
+  "name": "@everyday-nautilus/scrambler",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "verify": "node scripts/verify-fto.mjs"
+  },
+  "dependencies": {
+    "@everyday-nautilus/core": "workspace:*",
+    "cubing": "0.63.7"
+  }
+}

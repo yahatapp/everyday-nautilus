@@ -1,0 +1,25 @@
+name: Setup project
+description: Install the pinned Node.js, pnpm, and workspace dependencies
+runs:
+  using: composite
+  steps:
+    - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+      with:
+        node-version-file: false
+        cache: true
+        install: false
+    - name: Install dependencies and pinned runtime
+      shell: bash
+      run: pnpm install --frozen-lockfile
+    - name: Verify Node.js runtime
+      shell: bash
+      run: |
+        pnpm exec node --input-type=module -e '
+          import { readFileSync } from "node:fs";
+          const manifest = JSON.parse(readFileSync("package.json", "utf8"));
+          const expected = manifest.devEngines.runtime.version;
+          if (process.versions.node !== expected) {
+            throw new Error(`Expected Node ${expected}, got ${process.versions.node}`);
+          }
+          console.log(`Node ${process.versions.node} (${process.execPath})`);
+        '

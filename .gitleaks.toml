@@ -1,0 +1,15 @@
+title = "Everyday Nautilus secret scanning"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Local dependency stores and generated runtime state"
+paths = [
+  '''(^|/)node_modules/''',
+  '''(^|/)\.pnpm-store/''',
+  '''(^|/)\.pnpm-cache/''',
+  '''(^|/)\.npm-cache/''',
+  '''(^|/)\.wrangler/''',
+  '''(^|/)\.git/''',
+]

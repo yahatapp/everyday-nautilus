@@ -1,0 +1,43 @@
+{
+  "name": "everyday-nautilus",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=24.0.0 <25",
+    "pnpm": ">=11.11.0 <12"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @everyday-nautilus/web dev",
+    "build": "pnpm --filter @everyday-nautilus/web build",
+    "preview": "pnpm --filter @everyday-nautilus/web preview",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:workers": "playwright test --config playwright.workers.config.ts",
+    "dev:workers": "wrangler dev --env production --local --ip 127.0.0.1 --port 8787",
+    "deploy:dry-run": "wrangler deploy --env production --dry-run",
+    "deploy:workers": "wrangler deploy --env production",
+    "verify:scrambler": "pnpm --filter @everyday-nautilus/scrambler verify",
+    "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+    "@playwright/test": "1.63.0",
+    "@types/node": "24.13.6",
+    "typescript": "7.0.2",
+    "vitest": "5.0.2",
+    "wrangler": "4.141.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "24.21.0",
+      "onFail": "download"
+    }
+  }
+}
