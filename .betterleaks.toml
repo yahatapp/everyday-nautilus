@@ -1,0 +1,12 @@
+title = "Everyday Nautilus secret scanning"
+betterleaksMinVersion = "v1.8.1"
+
+prefilter = '''
+filter.matchesAny(attributes["path"], [
+  `(?:^|/)node_modules(?:/|$)`,
+  `(?:^|/)\.(?:pnpm-store|pnpm-cache|npm-cache|wrangler|direnv|git)(?:/|$)`
+])
+'''
+
+[extend]
+useDefault = true

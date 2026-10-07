@@ -17,6 +17,8 @@
     "format": "biome check --write .",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:repo": "node scripts/verify-repo-checks.mjs",
+    "audit:deps": "pnpm audit --audit-level=low",
     "test:e2e": "playwright test",
     "test:e2e:workers": "playwright test --config playwright.workers.config.ts",
     "dev:workers": "wrangler dev --env production --local --ip 127.0.0.1 --port 8787",

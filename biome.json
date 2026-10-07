@@ -10,6 +10,7 @@
       "!!**/.pnpm-cache",
       "!!**/.npm-cache",
       "!!**/.wrangler",
+      "!!**/.direnv",
       "!!**/playwright-report",
       "!!**/test-results"
     ]

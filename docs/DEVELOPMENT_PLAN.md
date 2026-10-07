@@ -5,14 +5,19 @@
 ### 現在の進捗：M0完了
 
 - [x] Node 24.21.0をpnpmの`devEngines.runtime`で管理。pnpmのworkspace、ランタイム・依存バージョンとlockfileを固定。CIもpnpmでNodeを導入。
+- [x] Nix flakeでpnpm・Git・Betterleaks・Lefthook等を固定し、開発環境とCI/CDで共用。pre-commitに秘密情報・ステージ済み差分・ローカル環境ファイル・`pnpm check`の検証を追加。
 - [x] React／Viteの起動ページ、通常FTOの実生成、生成元・版の記録。
 - [x] UIに依存しない共有型とAo5計算。+2／DNF等の9件のユニットテスト。
 - [x] Biome、型チェック、Vitest、本番ビルドを確認。
 - [x] NodeでFTO生成・パズルモデルへの適用・逆手順での復元を確認。
 - [x] 本番ブラウザのPC幅／スマホ幅で生成と再生成の2件のE2Eを確認。
 - [x] 開発モードの生成も確認。開発サーバーは5187、E2E専用は4187。
-- [x] GitHub Actionsに静的チェック、シークレットスキャン、テスト、検証済みビルドのCloudflare WorkersへのCDを設定。[初回設定](DEPLOYMENT.md)。リモートCI/CDの実行は未確認。
-- [x] actionlint、Gitleaks、Workers dry run、Workers配信での4件のE2Eをローカルで確認。削除済みのダミーの秘密情報も履歴から検出し、失敗終了とログのマスクを確認。
+- [x] GitHub Actionsに静的チェック、Betterleaks、依存audit、テストを設定。mainへのPRでCI、main更新後にマージ結果を再検証してWorkersへCD。[初回設定](DEPLOYMENT.md)。変更後のリモートCI/CDの実行は未確認。
+- [x] coffeelogを参考にDependabotの週次・グループ更新とNixキャッシュを追加。PRごとのCIをキャンセル制御し、mainのDeployを手動実行可能に設定。pnpm 11のDependabot実更新と変更後のリモート実行は未確認。
+- [x] auditで検出された間接依存11件を`undici@7.29.1`・`source-map-js@1.2.2`への限定overrideで解消。再監査、本番ビルドの再生成、FTO検証、Workers dry run、Vite／Workers E2Eを確認。
+- [x] HTMLのrobots指定とWorkersの`X-Robots-Tag`で検索エンジンのインデックスを抑止。
+- [x] Betterleaksでステージ済み・削除済みのダミーの秘密情報の検出とログのマスクを確認。ローカル環境ファイルの強制追加を拒否し、テンプレートと削除を許可することを検証。
+- [x] Nix環境のpre-commit全4項目、依存audit、actionlint／ShellCheck／nixfmt、Workers dry run、noindexを含むWorkersの6件のE2Eを確認。
 
 タイマー・永続保存・PWA・ステップ生成・ケースカタログ・暗記機能は未実装。次の作業はM1のタイマー状態機械と入力対応。
 

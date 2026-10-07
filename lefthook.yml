@@ -1,0 +1,18 @@
+pre-commit:
+  piped: true
+  commands:
+    reject-local-environment-files:
+      priority: 1
+      run: nix develop --command bash scripts/reject-local-environment-files.sh --staged
+    secret-scan:
+      priority: 2
+      run: >-
+        nix develop --command betterleaks git . --pre-commit --staged
+        --config=.betterleaks.toml --redact=100 --no-banner --no-color
+        --ignore-gitleaks-allow
+    staged-diff-check:
+      priority: 3
+      run: nix develop --command git diff --cached --check
+    project-check:
+      priority: 4
+      run: nix develop --command pnpm check

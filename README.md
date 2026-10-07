@@ -9,13 +9,16 @@ FTOのタイマー、Nautilusメソッドのステップ練習、手順暗記を
 - [開発計画](docs/DEVELOPMENT_PLAN.md)
 - [確認した資料と採用方針](docs/REFERENCES.md)
 - [CI/CDとCloudflare Workersの設定](docs/DEPLOYMENT.md)
+- [Nix環境・Gitフックの使い方](docs/DEVELOPMENT_ENVIRONMENT.md)
 
 ## 開発を始める
 
-pnpm 11.11.0を使用します。Node.js 24.21.0は`package.json`の`devEngines.runtime`に固定し、pnpmが導入・管理します。`pnpm install`でプロジェクト用のNodeを導入し、`pnpm`経由のコマンドはそのNodeを使用します。
+Nixを導入し、`nix develop`でこのプロジェクト用のツールを利用します。pnpm 11.11.0・Git・Betterleaks・Lefthook等は`flake.lock`で固定し、CI/CDも同じ環境を使用します。Node.js 24.21.0は`package.json`の`devEngines.runtime`でpnpmが管理します。
 
 ```sh
+nix develop
 pnpm install --frozen-lockfile
+lefthook install
 pnpm exec node --version
 pnpm dev
 ```
@@ -38,6 +41,8 @@ pnpm dev --host 0.0.0.0
 | `pnpm check` | 静的チェック・型チェック・ユニットテスト・本番ビルド |
 | `pnpm format` | Biomeで整形と自動修正 |
 | `pnpm test:watch` | ユニットテストの監視 |
+| `pnpm test:repo` | 秘密情報・環境ファイル・ステージ済み差分の拒否動作を検証 |
+| `pnpm audit:deps` | 開発・本番依存の既知の脆弱性を監査 |
 | `pnpm verify:scrambler` | FTO生成結果をパズルモデルに適用し、逆手順による復元を検証 |
 | `pnpm build` | 本番ビルド（`apps/web/dist`） |
 | `pnpm preview` | 本番ビルドのローカル確認 |
@@ -55,11 +60,11 @@ pnpm build
 pnpm test:e2e
 ```
 
-GitHub Actionsでは静的チェック、Git履歴と本番アセットのシークレットスキャン、テストを実行します。すべて成功した`main`のビルド成果物をCloudflare Workersへ自動デプロイします。GitHub接続と`production`環境のSecrets設定は[デプロイ手順](docs/DEPLOYMENT.md)を参照してください。
+mainへのPRでCIを実行し、同じPRの古い実行はキャンセルします。mainへのマージ後はDeployがマージ結果を同じCIで検証し、成功した成果物をCloudflare Workersへ自動デプロイします。mainを指定した手動再デプロイも可能です。CIは静的チェック、Betterleaks、依存audit、テストを実行します。Dependabotは毎週月曜09:00（日本時間）にnpm依存とGitHub Actionsの更新PRを作成します。更新方針と`production`環境のSecrets設定は[デプロイ手順](docs/DEPLOYMENT.md)を参照してください。
 
-2026-09-26の検証：静的チェック・型チェック・9件のユニットテスト・本番ビルド・NodeのFTO検証・PC／スマホ幅の2件のE2E・開発モードのFTO生成が成功しました。実機・PWA・リモートCIは今後確認します。
+2026-09-26の検証：Nix環境で静的チェック・型チェック・9件のユニットテスト・本番ビルド・FTO状態検証・Viteの2件／Workersの6件のE2E・Workers dry runが成功しました。pre-commit全4項目と検出動作の検証も成功し、依存audit・ソース／成果物のBetterleaksは検出なしです。実機・PWA・変更後のリモートCI/CDは今後確認します。
 
-CI/CD追加時には、actionlint、ソースと本番アセットのGitleaksスキャン、Wrangler dry run、Workers配信での4件のE2Eも成功しました。削除済みのダミーの秘密情報をGit履歴から検出し、失敗終了とログのマスクも確認しています。本番公開はGitHub接続とSecrets登録後に確認します。
+pre-commitでは、ローカル環境ファイルの拒否、ステージ済み差分のBetterleaksスキャン、`git diff --cached --check`、`pnpm check`を実行します。検索エンジン向けにはHTMLとHTTPヘッダーで`noindex`を設定しています。[環境とフックの詳細](docs/DEVELOPMENT_ENVIRONMENT.md)
 
 本番ビルドには、生成器の一部の遅延チャンクが大きいという警告があります。MVPのPWA対応時に配信量とキャッシュ対象を調整します。
 
@@ -72,7 +77,10 @@ packages/scrambler/  cubing.jsのBrowser／Node用アダプター
 packages/scrambler/scripts/  スクランブルの動作確認
 docs/                開発計画・調査記録
 reference/           元資料のリンク
-.github/             CI/CD、共通セットアップ、検証ツール
+.github/             Dependabot、CI/CD、共通セットアップ
+scripts/             コミット対象の検査と検出動作の検証
+flake.nix / flake.lock  開発・CI/CD共通のNixツール環境
+lefthook.yml         pre-commit設定
 wrangler.jsonc       Cloudflare WorkersのStatic Assets配信設定
 ```
 
@@ -94,4 +102,4 @@ pnpm exec node --version
 pnpm check
 ```
 
-バージョンと配布ファイルのチェックサムを`pnpm-lock.yaml`に記録します。CIも`pnpm/setup`で同じ指定を読み取り、pnpmでNodeを導入します。シェルからの直接の`node`実行はグローバル環境のNodeを使用するため、このプロジェクトのスクリプトは`pnpm`経由で実行してください。[pnpmのランタイム管理](https://pnpm.io/package_json#devenginesruntime)
+バージョンと配布ファイルのチェックサムを`pnpm-lock.yaml`に記録します。CIもNixから導入したpnpmで同じ指定を読み取ります。Nix側のNodeはpnpm起動用なので、このプロジェクトのスクリプトは`pnpm`経由で実行してください。[pnpmのランタイム管理](https://pnpm.io/package_json#devenginesruntime)
