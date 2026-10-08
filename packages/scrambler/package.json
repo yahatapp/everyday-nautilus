@@ -12,6 +12,6 @@
   },
   "dependencies": {
     "@everyday-nautilus/core": "workspace:*",
-    "cubing": "0.63.7"
+    "cubing": "0.63.8"
   }
 }
