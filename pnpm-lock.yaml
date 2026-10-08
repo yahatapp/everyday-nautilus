@@ -71,8 +71,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       cubing:
-        specifier: 0.63.7
-        version: 0.63.7
+        specifier: 0.63.8
+        version: 0.63.8
 
 packages:
 
@@ -517,12 +517,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@optique/core@1.3.0':
-    resolution: {integrity: sha512-Mg0onYl6TswC2+BGkTIycltIQ/rFzPfu6g6LcxT63wXiu8MiyK7xoXnoRmmQGPHv+gJ3qFvl4gc/q1C8bMpdew==}
+  '@optique/core@1.3.2':
+    resolution: {integrity: sha512-YVdAuhx7l2UcnoeAsAuRgQ5LDGlixwQ6LuSmhiNPwZt29PU4rCkbTgo8P2o+OmF8MHKCJkaApYhKY6+QYhVWiw==}
     engines: {bun: '>=1.2.0', deno: '>=2.3.0', node: '>=20.0.0'}
 
-  '@optique/run@1.3.0':
-    resolution: {integrity: sha512-LhnBjIGK1CfF1nW+1sLxyI+EZ4/JZBy5EEMmkdXfmViDdQzJOvJKjEkF1ofxDpjfWcbs4fW8XkMBxE8zRCnwrA==}
+  '@optique/run@1.3.2':
+    resolution: {integrity: sha512-9Dovp3LHLmUZok7Eyzx0NAY+gh3tr/VA9cOmBuWDxioBayZGAStszLUHh1y9o9zuv31mNdeFgDUW9vY1vwJ/Ag==}
     engines: {bun: '>=1.2.0', deno: '>=2.3.0', node: '>=20.0.0'}
 
   '@oxc-project/types@0.151.0':
@@ -854,8 +854,8 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  cubing@0.63.7:
-    resolution: {integrity: sha512-j+qPrkc+Wj7XYncrs1tIG4RfkhpNVGiIVTtopWN9ZYl57LYgdHEAK9jJcI66i/M7Dt5Veo3HbqPk7mV/DNH3JA==}
+  cubing@0.63.8:
+    resolution: {integrity: sha512-suliTEg6p+PgyFcGtp3Y2NLd8gHnZFKYa5+Wd2HK7ciKuQOIuvRiM/on6HTVQuAxz2cNB/7WedgfUjQ1kR0kcA==}
     engines: {bun: '>=1.3.0', node: '>=22.3.0'}
     hasBin: true
 
@@ -1632,11 +1632,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@optique/core@1.3.0': {}
+  '@optique/core@1.3.2': {}
 
-  '@optique/run@1.3.0':
+  '@optique/run@1.3.2':
     dependencies:
-      '@optique/core': 1.3.0
+      '@optique/core': 1.3.2
 
   '@oxc-project/types@0.151.0': {}
 
@@ -1833,11 +1833,11 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  cubing@0.63.7:
+  cubing@0.63.8:
     dependencies:
       '@cubing/lazy-promise': 0.1.1
-      '@optique/core': 1.3.0
-      '@optique/run': 1.3.0
+      '@optique/core': 1.3.2
+      '@optique/run': 1.3.2
       '@types/three': 0.169.0
       '@types/web-bluetooth': 0.0.21
       random-uint-below: 3.3.0
