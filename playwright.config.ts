@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
   testDir: "./apps/web/e2e",
+  outputDir: "test-results/vite",
   fullyParallel: false,
   retries: process.env.CI ? 1 : 0,
   reporter: "list",

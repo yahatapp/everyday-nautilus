@@ -24,8 +24,12 @@
 
 ## Development and checks
 
+- Enter `nix develop` before running project commands. `flake.lock` pins pnpm, Git, Betterleaks, Lefthook, actionlint, ShellCheck, and nixfmt for local development and CI/CD. Do not replace them with independently installed versions.
 - Node 24.21.0 is managed by pnpm through root `package.json` `devEngines.runtime`; use pnpm 11.11.0. Runtime and dependencies are pinned in manifests and `pnpm-lock.yaml`.
-- Run Node through `pnpm exec node` and update it with `pnpm runtime set node <version>`. CI uses `pnpm/setup`. Keep the runtime declaration as the version source.
+- Run Node through `pnpm exec node` and update it with `pnpm runtime set node <version>`. Nix supplies pnpm's bootstrap runtime; pnpm manages the application's Node. Keep the runtime declaration as the version source.
+- Install Git hooks with `lefthook install`. Pre-commit runs staged Betterleaks scanning, `git diff --cached --check`, `pnpm check`, and local environment file rejection. Use `pnpm test:repo` to verify these rejection rules.
+- Main-targeting PRs run CI; main updates run CD with the same checks on the merged commit. Dependency audit covers development and production dependencies and fails on known vulnerabilities or registry errors.
+- Keep the HTML robots directive and Workers `X-Robots-Tag` set to noindex. Check root URLs, SPA fallback URLs, and static files when changing hosting.
 - Use `pnpm check` for static checks, type checks, unit tests, and production build.
 - When changing the generator or bundling, run `pnpm verify:scrambler` and `pnpm test:e2e` against a fresh production build.
 - Test timer transitions, statistics boundaries, storage recovery, and constrained states where the behavior can fail. Avoid tests that merely duplicate trivial implementation details.

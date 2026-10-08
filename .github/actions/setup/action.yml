@@ -1,20 +1,26 @@
 name: Setup project
-description: Install the pinned Node.js, pnpm, and workspace dependencies
+description: Install Nix tools and the pnpm-managed Node.js runtime
 runs:
   using: composite
   steps:
-    - uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+    - uses: DeterminateSystems/nix-installer-action@3138316df39ed29be04236d7ffc686fa525866aa # v23
       with:
-        node-version-file: false
-        cache: true
-        install: false
+        determinate: false
+    - name: Cache Nix store
+      uses: DeterminateSystems/magic-nix-cache-action@84c0677f58dcedf3b91f8223ce36a9ea5b3c84b7 # v15
+      with:
+        use-gha-cache: enabled
+        use-flakehub: disabled
+    - name: Realize the locked Nix environment
+      shell: bash
+      run: nix develop --command true
     - name: Install dependencies and pinned runtime
       shell: bash
-      run: pnpm install --frozen-lockfile
+      run: nix develop --command pnpm install --frozen-lockfile
     - name: Verify Node.js runtime
       shell: bash
       run: |
-        pnpm exec node --input-type=module -e '
+        nix develop --command pnpm exec node --input-type=module -e '
           import { readFileSync } from "node:fs";
           const manifest = JSON.parse(readFileSync("package.json", "utf8"));
           const expected = manifest.devEngines.runtime.version;

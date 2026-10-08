@@ -1,17 +1,18 @@
-name: CI / Deploy
+name: CI
 
 on:
-  push:
   pull_request:
-  workflow_dispatch:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review]
+  workflow_call:
 
 permissions:
   contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  # Let production runs finish; superseded PR/branch checks can be cancelled.
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  # Keep the checks used by a production deployment running to completion.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   CI: "true"
@@ -29,13 +30,17 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/setup
       - name: Biome
-        run: pnpm lint
+        run: nix develop --command pnpm lint
       - name: TypeScript
-        run: pnpm typecheck
-      - name: Install actionlint
-        run: bash .github/scripts/install-ci-tool.sh actionlint
+        run: nix develop --command pnpm typecheck
+      - name: Check Nix definitions
+        run: |
+          nix flake check --all-systems --no-build
+          nix fmt -- --check flake.nix
+      - name: Check shell scripts
+        run: nix develop --command shellcheck scripts/*.sh
       - name: Check GitHub Actions workflows
-        run: actionlint -color
+        run: nix develop --command actionlint -color
 
   secret-scan:
     name: Secret scan
@@ -46,16 +51,31 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Install Gitleaks
-        run: bash .github/scripts/install-ci-tool.sh gitleaks
+      - uses: ./.github/actions/setup
+      - name: Reject tracked local environment files
+        run: nix develop --command bash scripts/reject-local-environment-files.sh --tracked
+      - name: Verify repository safety checks
+        run: nix develop --command pnpm test:repo
       - name: Scan complete Git history
         run: >-
-          gitleaks git . --log-opts="--all" --config=.gitleaks.toml
+          nix develop --command betterleaks git . --log-opts="--all" --config=.betterleaks.toml
           --redact=100 --no-banner --no-color --ignore-gitleaks-allow
       - name: Scan checkout
         run: >-
-          gitleaks dir . --config=.gitleaks.toml
+          nix develop --command betterleaks dir . --config=.betterleaks.toml
           --redact=100 --no-banner --no-color --ignore-gitleaks-allow
+
+  dependency-audit:
+    name: Dependency audit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - name: Audit production and development dependencies
+        run: nix develop --command pnpm audit:deps
 
   test-build:
     name: Tests and build
@@ -67,24 +87,27 @@ jobs:
           persist-credentials: false
       - uses: ./.github/actions/setup
       - name: Unit tests
-        run: pnpm test
+        run: nix develop --command pnpm test
       - name: Verify random-state FTO generator
-        run: pnpm verify:scrambler
+        run: nix develop --command pnpm verify:scrambler
       - name: Build production assets
-        run: pnpm build
+        run: nix develop --command pnpm build
       - name: Validate Workers deployment without publishing
-        run: pnpm deploy:dry-run
+        run: nix develop --command pnpm deploy:dry-run
       - name: Install Chromium
-        run: pnpm exec playwright install --with-deps --only-shell chromium
+        timeout-minutes: 5
+        # GitHub-hosted Ubuntu already includes Chrome's runtime libraries.
+        # Download the pinned Playwright browser without refreshing apt mirrors.
+        run: nix develop --command pnpm exec playwright install --only-shell chromium
       - name: Browser tests against Vite production preview
-        run: pnpm test:e2e
+        timeout-minutes: 5
+        run: nix develop --command pnpm test:e2e
       - name: Browser tests against Workers local runtime
-        run: pnpm test:e2e:workers
-      - name: Install Gitleaks
-        run: bash .github/scripts/install-ci-tool.sh gitleaks
+        timeout-minutes: 5
+        run: nix develop --command pnpm test:e2e:workers
       - name: Scan built assets
         run: >-
-          gitleaks dir apps/web/dist --config=.gitleaks.toml
+          nix develop --command betterleaks dir apps/web/dist --config=.betterleaks.toml
           --redact=100 --no-banner --no-color --ignore-gitleaks-allow
       - name: Save verified production assets
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -101,36 +124,3 @@ jobs:
           path: test-results
           if-no-files-found: ignore
           retention-days: 7
-
-  deploy:
-    name: Deploy production
-    needs: [static-checks, secret-scan, test-build]
-    if: >-
-      github.ref == 'refs/heads/main' &&
-      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    environment: production
-    concurrency:
-      group: cloudflare-workers-production
-      cancel-in-progress: false
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          persist-credentials: false
-      - uses: ./.github/actions/setup
-      - name: Download this run's verified assets
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          name: web-dist-${{ github.sha }}
-          path: apps/web/dist
-      - name: Deploy to Cloudflare Workers
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          if [[ -z "$CLOUDFLARE_API_TOKEN" || -z "$CLOUDFLARE_ACCOUNT_ID" ]]; then
-            echo "::error::Set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in the production environment. See docs/DEPLOYMENT.md."
-            exit 1
-          fi
-          pnpm deploy:workers --message "GitHub Actions commit $GITHUB_SHA"
