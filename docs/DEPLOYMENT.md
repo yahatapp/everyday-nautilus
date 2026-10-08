@@ -27,6 +27,8 @@ flowchart LR
 
 E2EはViteの本番previewとWranglerのローカルWorkersランタイムの両方で行う。後者ではSPAの深いURLへの直接アクセスも確認する。どちらもビルド済みアセットを使用する。
 
+CIはChrome系の実行ライブラリが導入済みのGitHubホストランナー`ubuntu-24.04`を使用する。Playwrightのブラウザ導入は`install --only-shell chromium`で固定版の本体だけを取得し、`--with-deps`によるapt更新を行わない。Ubuntuミラーの応答待ちでジョブ全体が止まるのを避けるため、ブラウザ導入と各E2Eステップの上限はそれぞれ5分、テスト・ビルドジョブ全体は20分に設定する。セルフホストのLinuxランナーへ変更する場合は、必要なOSライブラリをランナー側で準備する。[Ubuntuランナーの構成](https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2404-Readme.md)、[Playwrightのブラウザ導入](https://playwright.dev/docs/browsers)
+
 Deployの検証ステージでmainのコミットをビルドし、デプロイステージはビルドし直さず同じ実行の`web-dist-<commit SHA>`を使用する。PRの成果物を本番公開に流用しない。検証が失敗・キャンセルされた場合はデプロイを実行しない。PRや`main`以外のブランチには本番デプロイの条件が成立しない。
 
 ## Dependabot

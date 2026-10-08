@@ -80,7 +80,7 @@ jobs:
   test-build:
     name: Tests and build
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
@@ -95,10 +95,15 @@ jobs:
       - name: Validate Workers deployment without publishing
         run: nix develop --command pnpm deploy:dry-run
       - name: Install Chromium
-        run: nix develop --command pnpm exec playwright install --with-deps --only-shell chromium
+        timeout-minutes: 5
+        # GitHub-hosted Ubuntu already includes Chrome's runtime libraries.
+        # Download the pinned Playwright browser without refreshing apt mirrors.
+        run: nix develop --command pnpm exec playwright install --only-shell chromium
       - name: Browser tests against Vite production preview
+        timeout-minutes: 5
         run: nix develop --command pnpm test:e2e
       - name: Browser tests against Workers local runtime
+        timeout-minutes: 5
         run: nix develop --command pnpm test:e2e:workers
       - name: Scan built assets
         run: >-
