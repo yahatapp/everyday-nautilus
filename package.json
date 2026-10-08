@@ -28,12 +28,12 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.14",
+    "@biomejs/biome": "2.5.15",
     "@playwright/test": "1.63.0",
-    "@types/node": "24.13.6",
+    "@types/node": "24.19.1",
     "typescript": "7.0.2",
-    "vitest": "5.0.2",
-    "wrangler": "4.141.0"
+    "vitest": "5.0.3",
+    "wrangler": "4.147.0"
   },
   "devEngines": {
     "runtime": {
