@@ -110,7 +110,7 @@ jobs:
           nix develop --command betterleaks dir apps/web/dist --config=.betterleaks.toml
           --redact=100 --no-banner --no-color --ignore-gitleaks-allow
       - name: Save verified production assets
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: web-dist-${{ github.sha }}
           path: apps/web/dist
@@ -118,7 +118,7 @@ jobs:
           retention-days: 7
       - name: Save browser failure traces
         if: failure()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: browser-traces-${{ github.sha }}
           path: test-results
