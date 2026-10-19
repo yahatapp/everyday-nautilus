@@ -44,11 +44,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/scrambler
       react:
-        specifier: 19.3.0
-        version: 19.3.0
+        specifier: 19.3.1
+        version: 19.3.1
       react-dom:
-        specifier: 19.3.0
-        version: 19.3.0(react@19.3.0)
+        specifier: 19.3.1
+        version: 19.3.1(react@19.3.1)
     devDependencies:
       '@types/react':
         specifier: 19.3.0
@@ -71,8 +71,8 @@ importers:
         specifier: workspace:*
         version: link:../core
       cubing:
-        specifier: 0.63.7
-        version: 0.63.7
+        specifier: 0.66.0
+        version: 0.66.0
 
 packages:
 
@@ -180,8 +180,8 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@cubing/lazy-promise@0.1.1':
-    resolution: {integrity: sha512-yeNQuAfwcZTTPkJhrkIIQFjg0Lr76awN+lWYh4bm6UK6AKUIbjuBBGjcoXWLw2zE78Y4na1rAx3OjMYEr2tYBA==}
+  '@cubing/lazy-promise@0.1.3':
+    resolution: {integrity: sha512-WVnnVWnmX2W4GvBTk496JP4EHi9JLxtVT2WpdbgRuUN8OXpEu5AMCY1AJPj2NTeiUe/hf8bit8Y6QAyXjMorZw==}
 
   '@emnapi/runtime@1.11.3':
     resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
@@ -517,12 +517,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@optique/core@1.3.0':
-    resolution: {integrity: sha512-Mg0onYl6TswC2+BGkTIycltIQ/rFzPfu6g6LcxT63wXiu8MiyK7xoXnoRmmQGPHv+gJ3qFvl4gc/q1C8bMpdew==}
+  '@optique/core@1.3.6':
+    resolution: {integrity: sha512-BXVuVyxP9bg8FbyvBYrSHisnAeG3XTf1xcuUjAWgDWKfzZssMGbSrMdiv4tA+BK3+CrSo6no+uHWpiHh4HMKeg==}
     engines: {bun: '>=1.2.0', deno: '>=2.3.0', node: '>=20.0.0'}
 
-  '@optique/run@1.3.0':
-    resolution: {integrity: sha512-LhnBjIGK1CfF1nW+1sLxyI+EZ4/JZBy5EEMmkdXfmViDdQzJOvJKjEkF1ofxDpjfWcbs4fW8XkMBxE8zRCnwrA==}
+  '@optique/run@1.3.6':
+    resolution: {integrity: sha512-uxlHO8vG/5ni1V+t+jdmYqiyYYY5uOevO/6U866oBpnlOxOGn2ZWIlPpDXAU3e5GRu4VecbeXoNff18yRDGoQw==}
     engines: {bun: '>=1.2.0', deno: '>=2.3.0', node: '>=20.0.0'}
 
   '@oxc-project/types@0.151.0':
@@ -854,8 +854,8 @@ packages:
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
-  cubing@0.63.7:
-    resolution: {integrity: sha512-j+qPrkc+Wj7XYncrs1tIG4RfkhpNVGiIVTtopWN9ZYl57LYgdHEAK9jJcI66i/M7Dt5Veo3HbqPk7mV/DNH3JA==}
+  cubing@0.66.0:
+    resolution: {integrity: sha512-rhfewkUEQWFjJ7yaNL6UQaKC0sPQRDlodynVz5qP+pQbnjnx64FqLMrd7xnjJm54r2ex11XSizG8PoK9+1mFxw==}
     engines: {bun: '>=1.3.0', node: '>=22.3.0'}
     hasBin: true
 
@@ -1158,13 +1158,13 @@ packages:
     resolution: {integrity: sha512-5x3lft1bn5gev9qA9iVFcmd0+t10j3eDl/QKB56T/3v/bdrM7WsfO2D0rb1JYcQdkcV0/Bs5iydgQmkTE6rczA==}
     engines: {node: '>=19'}
 
-  react-dom@19.3.0:
-    resolution: {integrity: sha512-JDk8dgif51OjFoDE70+OT9ICyYr+69HlmihNwp1+Nsfbna3t5sIiCa9ZJktDmQ4/1b/rn26hIAR2uYXDMr5r0Q==}
+  react-dom@19.3.1:
+    resolution: {integrity: sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==}
     peerDependencies:
-      react: ^19.3.0
+      react: ^19.3.1
 
-  react@19.3.0:
-    resolution: {integrity: sha512-E8LUcbtBWt20bbl2YoHfx4ZDBdxVTfOKtCZn9cDSJ4l6/nuoApcpIBcj47t2wZoVX8g2ZHuMHbiShgCR1T5Sog==}
+  react@19.3.1:
+    resolution: {integrity: sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw==}
     engines: {node: '>=0.10.0'}
 
   rolldown@1.2.11:
@@ -1427,7 +1427,7 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@cubing/lazy-promise@0.1.1': {}
+  '@cubing/lazy-promise@0.1.3': {}
 
   '@emnapi/runtime@1.11.3':
     dependencies:
@@ -1632,11 +1632,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.6.0
 
-  '@optique/core@1.3.0': {}
+  '@optique/core@1.3.6': {}
 
-  '@optique/run@1.3.0':
+  '@optique/run@1.3.6':
     dependencies:
-      '@optique/core': 1.3.0
+      '@optique/core': 1.3.6
 
   '@oxc-project/types@0.151.0': {}
 
@@ -1833,11 +1833,11 @@ snapshots:
 
   csstype@3.2.3: {}
 
-  cubing@0.63.7:
+  cubing@0.66.0:
     dependencies:
-      '@cubing/lazy-promise': 0.1.1
-      '@optique/core': 1.3.0
-      '@optique/run': 1.3.0
+      '@cubing/lazy-promise': 0.1.3
+      '@optique/core': 1.3.6
+      '@optique/run': 1.3.6
       '@types/three': 0.169.0
       '@types/web-bluetooth': 0.0.21
       random-uint-below: 3.3.0
@@ -1992,12 +1992,12 @@ snapshots:
 
   random-uint-below@3.3.0: {}
 
-  react-dom@19.3.0(react@19.3.0):
+  react-dom@19.3.1(react@19.3.1):
     dependencies:
-      react: 19.3.0
+      react: 19.3.1
       scheduler: 0.28.0
 
-  react@19.3.0: {}
+  react@19.3.1: {}
 
   rolldown@1.2.11:
     dependencies:
